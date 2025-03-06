@@ -11,6 +11,11 @@ struct User: Codable, Identifiable {
     let id: Int
     let name: String
     let profilePictureURL: URL
+    let stories: [URL] = [
+        URL(string: "https://picsum.photos/id/\(Int.random(in: 1...1000))/500"),
+        URL(string: "https://picsum.photos/id/\(Int.random(in: 1...1000))/500"),
+        URL(string: "https://picsum.photos/id/\(Int.random(in: 1...1000))/500")
+    ].compactMap(\.self)
 
     enum CodingKeys: String, CodingKey {
         case id

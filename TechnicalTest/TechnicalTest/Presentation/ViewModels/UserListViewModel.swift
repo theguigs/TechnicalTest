@@ -12,12 +12,13 @@ class UserListViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var storySeen: [User] = []
 
+    @Published var isLoading: Bool = false
+
     private var userService: UserService = .init()
 
     private var nextPage: Int = 0
     private var hasMoreContent: Bool = true
     private var cancellables = Set<AnyCancellable>()
-    private var isLoading: Bool = false
 
     init() {
         self.loadMoreUsers()
@@ -50,11 +51,8 @@ class UserListViewModel: ObservableObject {
     }
     
     func userDidTapped(_ user: User) {
-        if self.storySeen.contains(user) {
-            self.storySeen.removeAll(where: { $0 == user })
-        } else {
-            self.storySeen.append(user)
-        }
+        guard !self.storySeen.contains(user) else { return }
+        self.storySeen.append(user)
     }
     
     func storySeen(for user: User) -> Bool {

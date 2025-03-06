@@ -10,6 +10,8 @@ import SwiftUI
 struct UserListScrollView: View {
     @StateObject private var viewModel = UserListViewModel()
     
+    @State private var selectedUser: User? = nil
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 16) {
@@ -22,7 +24,24 @@ struct UserListScrollView: View {
                         }
                         .onTapGesture {
                             self.viewModel.userDidTapped(user)
+                            self.selectedUser = user
                         }
+                        .fullScreenCover(item: $selectedUser) { user in
+                            StoryView(
+                                viewModel: .init(user: user),
+                                isPresented: Binding(
+                                    get: { selectedUser != nil },
+                                    set: { isPresented in
+                                        if !isPresented { selectedUser = nil }
+                                    }
+                                )
+                            )
+                        }
+                }
+                
+                if self.viewModel.isLoading {
+                    GradientLoader()
+                        .padding()
                 }
             }
             .padding()
