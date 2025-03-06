@@ -16,7 +16,7 @@ struct UserListScrollView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 16) {
                 ForEach(self.viewModel.users) { user in
-                    UserView(user: user, showGradient: !self.viewModel.storySeen(for: user))
+                    UserView(user: user, showGradient: !self.viewModel.userSeen(for: user))
                         .onAppear {
                             if user == self.viewModel.users.last {
                                 self.viewModel.loadMoreUsers()

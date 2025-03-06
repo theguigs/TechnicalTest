@@ -9,32 +9,36 @@ import Foundation
 
 class StoryService {
     private(set) var likedStoryIDs: Set<String>
-    private let storageKey = "likedStoryIDs"
+    private let likedStoryIDsStorageKey = "likedStoryIDs"
 
-    init() {
-        if let savedData = UserDefaults.standard.array(forKey: self.storageKey) as? [String] {
-            self.likedStoryIDs = Set(savedData)
+    init() {        
+        if let likedStoryIDs = UserDefaults.standard.array(forKey: self.likedStoryIDsStorageKey) as? [String] {
+            self.likedStoryIDs = Set(likedStoryIDs)
         } else {
             self.likedStoryIDs = []
         }
     }
 
+    // MARK: - Like / Unlike stories
+
     func likeStory(storyID: String) {
         self.likedStoryIDs.insert(storyID)
-        self.saveToUserDefaults()
+        self.saveLikedStories()
     }
 
     func unlikeStory(storyID: String) {
         self.likedStoryIDs.remove(storyID)
-        self.saveToUserDefaults()
+        self.saveLikedStories()
     }
 
     func storyIsLiked(storyID: String) -> Bool {
         return likedStoryIDs.contains(storyID)
     }
+}
 
-    private func saveToUserDefaults() {
+private extension StoryService {
+    func saveLikedStories() {
         let stringIDs = likedStoryIDs.map { $0 }
-        UserDefaults.standard.set(stringIDs, forKey: self.storageKey)
+        UserDefaults.standard.set(stringIDs, forKey: self.likedStoryIDsStorageKey)
     }
 }

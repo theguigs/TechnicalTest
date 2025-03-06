@@ -10,17 +10,18 @@ import Combine
 
 class UserListViewModel: ObservableObject {
     @Published var users: [User] = []
-    @Published var storySeen: [User] = []
+    @Published var userSeenIDs: Set<String> = []
 
     @Published var isLoading: Bool = false
 
-    private var userService: UserService = .init()
-
+    private let userService: UserService = .init()
+    
     private var nextPage: Int = 0
     private var hasMoreContent: Bool = true
     private var cancellables = Set<AnyCancellable>()
 
     init() {
+        self.userSeenIDs = self.userService.seenUserIDs
         self.loadMoreUsers()
     }
     
@@ -51,11 +52,16 @@ class UserListViewModel: ObservableObject {
     }
     
     func userDidTapped(_ user: User) {
-        guard !self.storySeen.contains(user) else { return }
-        self.storySeen.append(user)
+        let stringId = "\(user.id)"
+        
+        guard !self.userService.storyIsSeen(userID: stringId) else { return }
+        self.userService.seeUser(userID: stringId)
+        
+        self.userSeenIDs = self.userService.seenUserIDs
     }
     
-    func storySeen(for user: User) -> Bool {
-        self.storySeen.contains(user)
+    func userSeen(for user: User) -> Bool {
+        let stringId = "\(user.id)"
+        return self.userSeenIDs.contains(stringId)
     }
 }

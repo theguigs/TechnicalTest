@@ -11,7 +11,7 @@ class StoryViewModel: ObservableObject {
     var user: User
     @Published var likedStoryIDs: Set<String>
     
-    let storyService = StoryService()
+    private let storyService = StoryService()
     
     init(user: User) {
         self.user = user
