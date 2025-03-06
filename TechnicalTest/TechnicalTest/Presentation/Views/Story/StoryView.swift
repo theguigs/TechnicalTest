@@ -41,7 +41,7 @@ struct StoryView: View {
                     }
             }
             .onTapGesture(count: 2) {
-                // TODO: Manage Like / Unlike feature
+                self.viewModel.likeOrUnlike(storyID: self.currentStoryIndex)
             }
 
             VStack {
@@ -82,6 +82,15 @@ struct StoryView: View {
                 }
                 .padding(8)
                 Spacer()
+                Button(action: {
+                    self.viewModel.likeOrUnlike(storyID: self.currentStoryIndex)
+                }) {
+                    Image(systemName: self.viewModel.isLiked(storyID: currentStoryIndex) ? "heart.fill" : "heart")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(8)
+                }
+
             }
         }
     }
